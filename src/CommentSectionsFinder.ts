@@ -1,15 +1,23 @@
 import * as vscode from 'vscode';
 import { SupportedProgrammingLanguages } from "./constants";
-import { CommentSectionsFinder_TypeScript } from "./CommentSectionsFinder_TypeScript";
+import { CommentSectionsFinderForTypeScript } from "./CommentSectionsFinder_TypeScript";
+
+
+
+export interface ICommentSection {
+  startLineNumber: number
+  endLineNumber: number
+}
 
 
 export interface ICommentSectionFinderResult {
   fileUri: vscode.Uri
   totalLineCount: number
+  commentSections: ICommentSection[]
 }
 
 
-export interface ICommentSectionFinderResult_ProgrammingLanguage {
+export interface ICommentSectionFinderResultForProgrammingLanguage {
   findCommentSections(fileUris: vscode.Uri[]): Promise<ICommentSectionFinderResult[]>
 }
 
@@ -27,9 +35,9 @@ export class CommentSectionsFinder implements ICommentSectionsFinder {
 
     switch (language) {
       case 'ts': {
-        const tsFinder = new CommentSectionsFinder_TypeScript();
+        const tsFinder = new CommentSectionsFinderForTypeScript();
         return tsFinder.findCommentSections(languageFiles);
       }
     }
-  }
+  };
 }
