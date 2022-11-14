@@ -2,9 +2,15 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { CommentBusterPanel } from './commentBusterPanel';
-import { CommentSectionsFinder } from './CommentSectionsFinder';
-import { TestView } from './testView';
-import { TestViewPanel } from './testViewPanel';
+import { C_Cplusplus_LanguageConfiguration, PythonLanguageConfiguration, TypeScriptLanguageConfiguration } from './LanguageConfigurations';
+
+
+
+let _commentBusterPanel: CommentBusterPanel | undefined;
+let _bustemCommandTypeScript: vscode.Disposable;
+let _bustemCommandPython: vscode.Disposable;
+let _bustemCommandCLangs: vscode.Disposable;
+
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -13,97 +19,71 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "comment-buster" is now active!');
-
   console.log ("Activating extension");
-  // new TestView(context);
-  // new TestViewPanel(context);
 
-  let _commentBusterPanel: CommentBusterPanel;
-
-
-  const setCommentBusterPanel = (commentBusterPanel: CommentBusterPanel) => {
-    _commentBusterPanel = commentBusterPanel;
+  const initPanel = (): CommentBusterPanel => {
+    if (!_commentBusterPanel) {
+      const commentBusterPanel = new CommentBusterPanel(context);
+      _commentBusterPanel = commentBusterPanel;
+      vscode.window.showInformationMessage('Creating CommentBusterPanel');
+    }
+    return _commentBusterPanel;
   };
+
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('comment-buster.helloWorld', async () => {
+	_bustemCommandTypeScript = vscode.commands.registerCommand('comment-buster.bustem-typescript', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World 2 from comment-buster!');
 
-    // const commentBusterPanel = new CommentBusterPanel(context);
-    const commentBusterPanel = new CommentBusterPanel(context);
-    setCommentBusterPanel(commentBusterPanel);
-    commentBusterPanel.blah();
-    // await commentBusterPanel.refreshTreeView();
+    // if (!_commentBusterPanel) {
+    //   const commentBusterPanel = new CommentBusterPanel(context);
+    //   _commentBusterPanel = commentBusterPanel;
+    //   vscode.window.showInformationMessage('Creating CommentBusterPanel');
+    // }
 
-    const commentSectionsFinder = new CommentSectionsFinder();
-    const commentSectionResults = await commentSectionsFinder.findCommentSections("ts", "ts");
-    commentSectionResults.forEach(csr => {
-      // console.log(csr);
-    });
-
-
-    // // vscode.window.
-    // vscode.workspace.workspaceFolders?.forEach(async f => {
-    //   console.log(f.name);
-    //   const tsFiles = await vscode.workspace.findFiles('**/*.ts', '**/node_modules/**');
-    //   tsFiles.forEach(async tsFile => {
-    //     // console.log(tsFile.path);
-    //     const tsContent = await vscode.workspace.openTextDocument(tsFile);
-    //     const lineCount = tsContent.lineCount;
-    //     console.log(tsFile.path + "  [" + lineCount + "]");
-    //   });
-
-    //   // const wsDir = await vscode.workspace.fs.readDirectory(f.uri);
-    //   // wsDir.forEach(element => {
-    //   //   console.log(element);
-    //   // });
-    // })
-
-
-
-    // //initialize
-		// const editor = vscode.window.activeTextEditor!
-		// let cursorPosition = editor.selection.start
-
-		// //getting function block
-		// let wordRange = editor.document.getWordRangeAtPosition(cursorPosition)
-		// let functionName = editor.document.getText(wordRange)
-
-		// var wordLine = editor.document.lineAt(cursorPosition)
-		// var textRange = new vscode.Range(wordLine.range.start, wordLine.range.end)
-		// var wholeText = editor.document.getText(textRange)
-
-		// var lineCount = cursorPosition.line
-
-    
-
+    const commentBusterPanel = initPanel();
+    commentBusterPanel.refreshTreeView(TypeScriptLanguageConfiguration);
 	});
 
-  let disposable2 = vscode.commands.registerCommand('comment-buster.refreshCommentBuster', async () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Refresh comment-buster!');
+  _bustemCommandPython = vscode.commands.registerCommand('comment-buster.bustem-python', async () => {
+		vscode.window.showInformationMessage('Refresh comment-buster for Python!');
 
-    await _commentBusterPanel.refreshTreeView();
+    // if (_commentBusterPanel) {
+    //   // _commentBusterPanel.bustComments();
+    //   _commentBusterPanel.refreshTreeView();
+    // } else {
+    //   vscode.window.showInformationMessage('CommentBusterPanel is not active');
+    // }
 
-    // const commentBusterPanel = new CommentBusterPanel(context);
-    // commentBusterPanel.blah();
-    // await commentBusterPanel.refreshTreeView();
-
-    // const commentSectionsFinder = new CommentSectionsFinder();
-    // const commentSectionResults = await commentSectionsFinder.findCommentSections("ts", "ts");
-    // commentSectionResults.forEach(csr => {
-    //   // console.log(csr);
-    // });
+    const commentBusterPanel = initPanel();
+    commentBusterPanel.refreshTreeView(PythonLanguageConfiguration);
 	});
 
-	context.subscriptions.push(disposable);
+  _bustemCommandCLangs = vscode.commands.registerCommand('comment-buster.bustem-clangs', async () => {
+		vscode.window.showInformationMessage('Refresh comment-buster for C/C++!');
+
+    const commentBusterPanel = initPanel();
+    commentBusterPanel.refreshTreeView(C_Cplusplus_LanguageConfiguration);
+	});
+
+	context.subscriptions.push(_bustemCommandTypeScript);
+  context.subscriptions.push(_bustemCommandPython);
+  context.subscriptions.push(_bustemCommandCLangs);  
+
   console.log("Activation complete");
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  vscode.window.showInformationMessage('Deactivating comment buster plugin');
+
+  _bustemCommandTypeScript.dispose();
+  _bustemCommandPython.dispose();
+  _bustemCommandCLangs.dispose();
+  
+  _commentBusterPanel = undefined;
+}

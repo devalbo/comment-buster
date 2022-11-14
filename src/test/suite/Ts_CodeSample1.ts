@@ -1,7 +1,9 @@
+export const Ts_CodeSample1 = `
+
 import * as vscode from 'vscode';
 // import _ from 'lodash';
 const _ = require('lodash');
-import { ICommentSection, ICommentSectionFinderResult, ICommentSectionFinderResultForProgrammingLanguage } from './CommentSectionsFinder';
+import { ICommentSection, ICommentSectionFinderResult, ICommentSectionFinderResult_ProgrammingLanguage } from './CommentSectionsFinder';
 
 
 type LineClassifications = 
@@ -9,7 +11,7 @@ type LineClassifications =
   'x' |  // code
   '#';   // comment
 
-export class CommentSectionsFinderForTypeScript implements ICommentSectionFinderResultForProgrammingLanguage {
+export class CommentSectionsFinder_TypeScript implements ICommentSectionFinderResult_ProgrammingLanguage {
  
   findCommentSections = async (fileUris: vscode.Uri[]): Promise<ICommentSectionFinderResult[]> => {
     console.log("FINDING TS COMMENT SECTIONS");
@@ -17,16 +19,10 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
     const allResultTasks = fileUris.map(async x => 
       this.createCommentSectionFinderResultForFile(x));
     
-    console.log("SECTION 1");
-    console.log(allResultTasks);
-
     const allResults = await Promise.all(allResultTasks);
-
-    console.log("SECTION 2");
 
     const resultsWithCommentSections = allResults.filter(this.hasCommentSectionFilter);
 
-    console.log("DONE WQITH RESULTS");
     return resultsWithCommentSections;
 
     // fileUris.forEach(async fileUri => {
@@ -38,41 +34,22 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
 
     // throw new Error("Method not implemented.");
     // throw new Error("Method not implemented.");
-  };
+  }
 
   createCommentSectionFinderResultForFile = async (fileUri: vscode.Uri): Promise<ICommentSectionFinderResult> => {
+    const tsContent = await vscode.workspace.openTextDocument(fileUri);
+    const lineCount = tsContent.lineCount;
 
-    try {
-      const tsContent = await vscode.workspace.openTextDocument(fileUri);
-      if (!tsContent) {
-        console.log("NO CONTENT - " + fileUri.toString());
-      }
-      const tsLines = _
-        .range(tsContent.lineCount)
-        .map((x: number) => tsContent.lineAt(x).text);
-  
-      const lineCount = tsContent.lineCount;
-      
-      // console.log(fileUri.fsPath);
-      const commentSections = this.findTypeScriptCommentSections(tsLines);
-  
-      return {
-        fileUri,
-        totalLineCount: lineCount,
-        commentSections
-      };
-    } catch (e) {
-      // console.log("ERR: createCommentSectionFinderResultForFile");
-      // console.log(fileUri.toString());
-      // console.log(e);
-      return {
-        fileUri,
-        totalLineCount: 0,
-        commentSections: [],
-      };
-    }
+    const tsLines = _.range(lineCount).map((x: number) => tsContent.lineAt(x).text);
+    
+    const commentSections = this.findTypeScriptCommentSections(tsLines);
 
-  };
+    return {
+      fileUri,
+      totalLineCount: lineCount,
+      commentSections
+    };
+  }
 
 
   classifyLine = (currentLine: string): LineClassifications => {
@@ -87,7 +64,7 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
     }
 
     return 'x';
-  };
+  }
 
 
   findTypeScriptCommentSections = (tsLines: string[]): ICommentSection[] => {
@@ -105,27 +82,27 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
       const currentLineNumber = i + 1;
 
       switch (lineClassification) {
-        case '#':
+        case '#': {
           if (!inCommentSection) {
             inCommentSection = true;
             commentSectionStartLine = currentLineNumber;
-            // console.log("COMMENTS SECTION START: " + commentSectionStartLine);
           }
-          break;
-        case ' ': 
-          break;
-        case 'x':
+        }
+        case ' ': {
+
+        }
+        case 'x': {
           if (inCommentSection) {
             const numLinesToBeCommentSection = 2;
             if (currentLineNumber >= commentSectionStartLine + numLinesToBeCommentSection) {
               commentSections.push({
                 startLineNumber: commentSectionStartLine,
-                endLineNumber: currentLineNumber - 1,
+                endLineNumber: currentLineNumber,
               });
             }
           }
           inCommentSection = false;
-          break;
+        }
       }
 
       // const x = 'abc' + lineClassification;
@@ -134,7 +111,7 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
     }
 
     return commentSections;
-  };
+  }
 
 
   hasCommentSectionFilter = (commentSectionFinderResult: ICommentSectionFinderResult): boolean => {
@@ -144,6 +121,7 @@ export class CommentSectionsFinderForTypeScript implements ICommentSectionFinder
     }
 
     return toKeep;
-  };
+  }
 
 }
+`;

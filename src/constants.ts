@@ -1,2 +1,3 @@
 
-export type SupportedProgrammingLanguages = 'ts';
+export type SupportedProgrammingLanguages = 'TypeScript' | 'Python' | 'C/C++';
+

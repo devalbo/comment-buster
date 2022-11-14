@@ -10,7 +10,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:comment-buster.helloWorld"
+    "onCommand:comment-buster.bustem-typescript",
+    "onCommand:comment-buster.bustem-python",
+    "onCommand:comment-buster.bustem-clangs"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -43,12 +45,20 @@
     },
     "commands": [
       {
-        "command": "comment-buster.helloWorld",
-        "title": "Bust Comments"
+        "command": "comment-buster.bustem-python",
+        "title": "Bust Comments - Python Files"
       },
       {
-        "command": "comment-buster.refreshCommentBuster",
-        "title": "Refresh Comments for Bustin'"
+        "command": "comment-buster.bustem-typescript",
+        "title": "Bust Comments - TypeScript Files"
+      },
+      {
+        "command": "comment-buster.bustem-clangs",
+        "title": "Bust Comments - C/C++ Files"
+      },
+      {
+        "command": "comment-buster.bustem2",
+        "title": "Backup/Extra Bustin'"
       }
     ]
   },
