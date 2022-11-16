@@ -1,4 +1,5 @@
-import { IPrintStatementSection } from "./printStatementBusterInterfaces";
+import { IPrintStatementSection } from "../printStatementBusterInterfaces";
+import { IRegexMatchLinesSection } from "./regexBusterInterfaces";
 
 
 
@@ -22,16 +23,13 @@ export const classifyLine = (currentLine: string, regexesToMatch: string[]): Rfl
     if (matches && matches?.length > 0) {
       return 'm';
     }
-    // if (text.startsWith(commentLineStarter)) {
-    //   return 'c';
-    // }
   }
 
   return 'x';
 };
 
 
-export const findMatchingRegexSectionsForLines = (lines: string[], regexesToMatch: string[]): IPrintStatementSection[] => {
+export const findMatchingRegexSectionsForLines = (lines: string[], regexesToMatch: string[]): IRegexMatchLinesSection[] => {
   
   const commentSections: IPrintStatementSection[] = [];
 

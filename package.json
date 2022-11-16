@@ -76,6 +76,12 @@
           "id": "commentBusterPanel",
           "name": "Comment Buster Panel"
         }
+      ],
+      "printStatementBusterPanel": [
+        {
+          "id": "printStatementBusterPanel",
+          "name": "Print Statement Buster Panel"
+        }
       ]
     },
     "viewsContainers": {

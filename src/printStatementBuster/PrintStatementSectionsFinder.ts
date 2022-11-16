@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { IPrintStatementSection, IPrintStatementSectionFinderResult, IPrintStatementSectionFinderResultForProgrammingLanguage } from '../printStatementBusterInterfaces';
-import { findMatchingRegexSectionsForLines } from '../RegexesForLinesMatcher';
+import { IPrintStatementSectionFinderResult, IPrintStatementSectionFinderResultForProgrammingLanguage } from '../printStatementBusterInterfaces';
+import { findMatchingRegexSectionsForLines } from '../regexMatchBuster/RegexesForLinesMatcher';
 const _ = require('lodash');
 
 
@@ -61,12 +61,12 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
     try {
       const lineCount = lines.length;
       // const printStatementSections = this.findPrintStatementSectionsForLines(lines, commentLineStarterCharacters);
-      const printStatementSections = findMatchingRegexSectionsForLines(lines, printStatementLineRegexes);
+      const regexMatchLinesSections = findMatchingRegexSectionsForLines(lines, printStatementLineRegexes);
   
       return {
         fileUri,
         totalLineCount: lineCount,
-        printStatementSections
+        printStatementSections: regexMatchLinesSections,
       };
     } catch (e) {
       return {

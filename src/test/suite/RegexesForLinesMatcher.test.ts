@@ -1,7 +1,7 @@
 
 // import { assert } from 'console';
 import * as assert from 'assert';
-import { RflmLineClassifications, classifyLine } from '../../RegexesForLinesMatcher';
+import { RflmLineClassifications, classifyLine } from '../../regexMatchBuster/RegexesForLinesMatcher';
 
 interface ILineRegexTestCase {
   line: string,
