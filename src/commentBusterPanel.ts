@@ -22,19 +22,6 @@ export class CommentBusterPanel {
     console.log(view);
 	}
 
-  // blah = () => {
-  //   console.log("BLAH FROM COMMENT BUSTER PANEL");
-  // };
-
-  // bustComments = async () => {
-  //   // const commentSectionsFinder = new CommentSectionsFinder();
-  //   // const commentSectionResults = await commentSectionsFinder.findCommentSections("ts", "ts");
-  //   // commentSectionResults.forEach(csr => {
-  //   //   console.log(csr);
-  //   // });
-
-  // };
-
   refreshTreeView = async (languageConfiguration: ILanguageConfiguration) => {
     console.log("REFRESH COMMENT BUSTER PANEL TREE VIEW");
 

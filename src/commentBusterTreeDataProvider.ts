@@ -3,55 +3,7 @@
 import * as vscode from 'vscode';
 import { CommentSectionsFinder } from './CommentSectionsFinder';
 import { ILanguageConfiguration, TypeScriptLanguageConfiguration } from './LanguageConfigurations';
-// import * as fs from 'fs';
-// import * as path from 'path';
-// import { Key } from './commentBusterTreeDataProviderOld';
 import { ICommentSection, ICommentSectionFinderResult, WorkspaceCommentSectionsFinder } from './WorkspaceCommentSectionsFinder';
-
-
-
-
-// export interface ICommentSection {
-//   startLineNumber: number
-//   endLineNumber: number
-// }
-
-
-// export interface ICommentSectionFinderResult {
-//   fileUri: vscode.Uri
-//   totalLineCount: number
-//   commentSections: ICommentSection[]
-// }
-
-
-
-// const tree: any = {
-//   'other': {
-//     'child': {}
-//   },
-// 	'a': {
-// 		'aa': {
-// 			'aaa': {
-// 				'aaaa': {
-// 					'aaaaa': {
-// 						'aaaaaa': {
-
-// 						}
-// 					}
-// 				}
-// 			}
-// 		},
-// 		'ab': {}
-// 	},
-// 	'b': {
-// 		'ba': {},
-// 		'bb': {}
-// 	},
-//   'c': {
-//     'commentx': {}
-//   }
-// };
-// const nodes: any = {};
 
 
 type CbTreeFileResult = {
@@ -60,20 +12,18 @@ type CbTreeFileResult = {
   children: CbCommenSection[]
 };
 
+
 type CbCommenSection = {
   cbDataType: 'commentSection'
   commentSection: ICommentSection
   parent: CbTreeFileResult
 };
 
+
 export type CbTreeNode = CbTreeFileResult | CbCommenSection;
 
-// export class RealCommentBusterTreeDataProvider implements vscode.TreeDataProvider<Dependency> {
-export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<CbTreeNode> {
-  // constructor(private workspaceRoot: string) {}
 
-  // private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> = new vscode.EventEmitter<Dependency | undefined | null | void>();
-  // readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> = this._onDidChangeTreeData.event;
+export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<CbTreeNode> {
 
   private _onDidChangeTreeData: vscode.EventEmitter<CbTreeNode | undefined | null | void> = new vscode.EventEmitter<CbTreeNode | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<CbTreeNode | undefined | null | void> = this._onDidChangeTreeData.event;
@@ -84,8 +34,8 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
   refresh = async (languageConfiguration: ILanguageConfiguration) => {
 
     const commentSectionsFinder = new WorkspaceCommentSectionsFinder();
-    // const commentSectionResults = await commentSectionsFinder.findCommentSections("ts", "ts");
     const commentSectionResults = await commentSectionsFinder.findCommentSections(languageConfiguration);
+
     const commentSectionData = commentSectionResults
       .filter(r => r.commentSections.length > 0)
       .map(r => {
@@ -93,7 +43,6 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
           return {
             cbDataType: 'commentSection',
             commentSection: s,
-            // parent: 
           } as CbCommenSection;
         });
 
@@ -110,21 +59,7 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
         return sourceDatum;
       });
 
-    commentSectionResults.forEach(csr => {
-      // console.log(csr);
-    });
-
-    // console.log("SETTING COMMENT SECTION DATA");
-    // console.log(commentSectionData);
-
     this.sourceData = commentSectionData;
-
-
-
-    // console.log("FIRING FROM REFRESH");
-    // tree['c'] = {
-    //   'commentxxx': {}
-    // };
 
     this._onDidChangeTreeData.fire();
   };
@@ -133,20 +68,20 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
   getFileResultTreeItem = (item: CbTreeFileResult): vscode.TreeItem => {
     const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.resultData.fileUri.toString()}`, true);
 
-    const fileLocation = item.resultData.fileUri;
+    // const fileLocation = item.resultData.fileUri;
 
-    const command = {
-			command: 'vscode.open',
-			title: 'Open Call',
-			arguments: [
-				// item.uri,
-        fileLocation,
-				// <vscode.TextDocumentShowOptions>{
-				// 	selection: element.item.selectionRange.with({ end: element.item.selectionRange.start }),
-				// 	preserveFocus: true
-				// }
-			]
-		};
+    // const command = {
+		// 	command: 'vscode.open',
+		// 	title: 'Open Call',
+		// 	arguments: [
+		// 		// item.uri,
+    //     fileLocation,
+		// 		// <vscode.TextDocumentShowOptions>{
+		// 		// 	selection: element.item.selectionRange.with({ end: element.item.selectionRange.start }),
+		// 		// 	preserveFocus: true
+		// 		// }
+		// 	]
+		// };
 
     return {
       label: /**vscode.TreeItemLabel**/<any>{ 
@@ -174,7 +109,7 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
     //   }
     // } as vscode.Range;
 
-    const range2 = new vscode.Range(item.commentSection.startLineNumber - 1, 0, item.commentSection.endLineNumber, 0);
+    const commentRange = new vscode.Range(item.commentSection.startLineNumber - 1, 0, item.commentSection.endLineNumber, 0);
 
     const command = {
 			command: 'vscode.open',
@@ -187,7 +122,7 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
 				// <vscode.TextDocumentShowOptions> {
         // <vscode.TextDocumentOpenOptions>
 					// selection: element.item.selectionRange.with({ end: element.item.selectionRange.start }),
-          selection: range2,
+          selection: commentRange,
 					// preserveFocus: true,
           // selection: 
 				}
@@ -246,35 +181,6 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
     }
 
     return undefined;
-
-    // throw new Error('Method not implemented.');
-
-    // let a: HoverProvider = {
-    //   provideHover(doc, pos, token): vscode.ProviderResult<{ key: string; }[]> {
-    //       return new Hover('Hello World');
-    //   }
-    // }
-
-    // const children = this.rcGetChildren(element?.key);
-
-    // const retval = children.map(c => ({
-    //   key: c,
-    // }));
-
-    // // const retval = [
-    // //   {
-    // //     key: children[0],
-    // //   }
-    // // ];
-
-    // return retval;
-
-    // return new vscode.ProviderResult<{ key: string; }[]> {
-    //   return [
-    //     {key: ""}
-    //   ];
-    //   // return new Hover('Hello World');
-    // }
   }
 
 
