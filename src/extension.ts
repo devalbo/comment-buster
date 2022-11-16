@@ -28,10 +28,10 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage('Creating CommentBusterPanel');
     }
 
-    const config = vscode.workspace.getConfiguration('comment-buster').get('directories');
+    // const config = vscode.workspace.getConfiguration('comment-buster').get('directories');
     // const config = vscode.workspace.getConfiguration('commentBuster.directories');
-    console.log("PLUGIN CONFIG");
-    console.log(config);
+    // console.log("PLUGIN CONFIG");
+    // console.log(config);
     // console.log(config.get("commentBuster"));
 
     return _commentBusterPanel;

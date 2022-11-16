@@ -124,7 +124,8 @@ export class CommentSectionsFinder implements ICommentSectionFinderResultForProg
 
 
   hasCommentSectionFilter = (commentSectionFinderResult: ICommentSectionFinderResult): boolean => {
-    const toKeep = commentSectionFinderResult.totalLineCount >= 100;
-    return toKeep;
+    // const toKeep = commentSectionFinderResult.totalLineCount >= 100;
+    // return toKeep;
+    return true;
   };
 }

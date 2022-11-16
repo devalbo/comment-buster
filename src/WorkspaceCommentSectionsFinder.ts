@@ -81,7 +81,7 @@ export class WorkspaceCommentSectionsFinder implements ICommentSectionsFinder {
     });
 
     const tsFinder = new CommentSectionsFinder();
-    const commentSections = tsFinder.findCommentSections(languageFiles, languageConfiguration.commentCharacters);
+    const commentSections = await tsFinder.findCommentSections(languageFiles, languageConfiguration.commentCharacters);
     return commentSections;
   };
 }
