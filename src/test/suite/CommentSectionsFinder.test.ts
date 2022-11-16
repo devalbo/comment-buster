@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { CommentSectionsFinder } from '../../commentBuster/CommentSectionsFinder';
 
+
 suite('CommentSectionsFinder Test Suite', () => {
 
   const _sut = new CommentSectionsFinder();

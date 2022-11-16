@@ -1,21 +1,22 @@
 import * as vscode from 'vscode';
 import { IPrintStatementSection, IPrintStatementSectionFinderResult, IPrintStatementSectionFinderResultForProgrammingLanguage } from '../printStatementBusterInterfaces';
+import { findMatchingRegexSectionsForLines } from '../RegexesForLinesMatcher';
 const _ = require('lodash');
 
 
 
-type LineClassifications = 
-  'e' |  // empty/blank line
-  'c' |  // comment
-  'x';   // code
+// type PsbLineClassifications = 
+//   'e' |  // empty/blank line
+//   'p' |  // print statement line
+//   'x';   // code
 
 export class PrintStatementSectionsFinder implements IPrintStatementSectionFinderResultForProgrammingLanguage {
  
-  findPrintStatementSections = async (fileUris: vscode.Uri[], commentLineStarterCharacters: string[]): Promise<IPrintStatementSectionFinderResult[]> => {
-    console.log("FINDING TS COMMENT SECTIONS");
+  findPrintStatementSections = async (fileUris: vscode.Uri[], printStatementLineRegexes: string[]): Promise<IPrintStatementSectionFinderResult[]> => {
+    console.log("FINDING TS PRINT STATEMENT SECTIONS");
     
     const allResultTasks = fileUris.map(async x => 
-      this.createCommentSectionFinderResultForFile(x, commentLineStarterCharacters));
+      this.createPrintStatementSectionFinderResultForFile(x, printStatementLineRegexes));
     
     console.log("SECTION 1");
     console.log(allResultTasks);
@@ -24,13 +25,14 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
 
     console.log("SECTION 2");
 
-    const resultsWithCommentSections = allResults.filter(this.hasCommentSectionFilter);
+    // const resultsWithCommentSections = allResults.filter(this.hasCommentSectionFilter);
 
-    console.log("DONE WQITH RESULTS");
-    return resultsWithCommentSections;
+    console.log("DONE WQITH PRINT STATEMENT FINDER RESULTS");
+    return allResults;
   };
 
-  createCommentSectionFinderResultForFile = async (fileUri: vscode.Uri, commentLineStarterCharacters: string[]): Promise<IPrintStatementSectionFinderResult> => {
+
+  createPrintStatementSectionFinderResultForFile = async (fileUri: vscode.Uri, printStatementLineRegexes: string[]): Promise<IPrintStatementSectionFinderResult> => {
 
     try {
       const tsContent = await vscode.workspace.openTextDocument(fileUri);
@@ -42,7 +44,7 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
         .range(tsContent.lineCount)
         .map((x: number) => tsContent.lineAt(x).text as string) as string[];
 
-      return this.createCommentSectionFinderResultForLines(fileUri, tsLines, commentLineStarterCharacters);
+      return this.createPrintStatementSectionFinderResultForLines(fileUri, tsLines, printStatementLineRegexes);
   
     } catch (e) {
       return {
@@ -51,15 +53,15 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
         printStatementSections: [],
       };
     }
-
   };
 
   
-  createCommentSectionFinderResultForLines = async (fileUri: vscode.Uri, lines: string[], commentLineStarterCharacters: string[]): Promise<IPrintStatementSectionFinderResult> => {
+  createPrintStatementSectionFinderResultForLines = async (fileUri: vscode.Uri, lines: string[], printStatementLineRegexes: string[]): Promise<IPrintStatementSectionFinderResult> => {
 
     try {
       const lineCount = lines.length;
-      const printStatementSections = this.findPrintStatementSectionsForLines(lines, commentLineStarterCharacters);
+      // const printStatementSections = this.findPrintStatementSectionsForLines(lines, commentLineStarterCharacters);
+      const printStatementSections = findMatchingRegexSectionsForLines(lines, printStatementLineRegexes);
   
       return {
         fileUri,
@@ -73,59 +75,58 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
         printStatementSections: [],
       };
     }
-
   };
 
-  classifyLine = (currentLine: string, commentLineStarterCharacters: string[]): LineClassifications => {
-    const text = currentLine.trim();
+  // classifyLine = (currentLine: string, commentLineStarterCharacters: string[]): PsbLineClassifications => {
+  //   const text = currentLine.trim();
     
-    for (let i=0; i < commentLineStarterCharacters.length; i++) {
-      const commentLineStarter = commentLineStarterCharacters[i];
-      if (text.startsWith(commentLineStarter)) {
-        return 'c';
-      }
-    }
+  //   for (let i=0; i < commentLineStarterCharacters.length; i++) {
+  //     const commentLineStarter = commentLineStarterCharacters[i];
+  //     if (text.startsWith(commentLineStarter)) {
+  //       return 'c';
+  //     }
+  //   }
 
-    if (text.length === 0) {
-      return 'e';
-    }
+  //   if (text.length === 0) {
+  //     return 'e';
+  //   }
 
-    return 'x';
-  };
+  //   return 'x';
+  // };
 
 
-  findPrintStatementSectionsForLines = (lines: string[], commentLineStarterCharacters: string[]): IPrintStatementSection[] => {
+  // findPrintStatementSectionsForLines = (lines: string[], commentLineStarterCharacters: string[]): IPrintStatementSection[] => {
     
-    const commentSections: IPrintStatementSection[] = [];
+  //   const commentSections: IPrintStatementSection[] = [];
 
-    const lineClassifications = lines.map(l => this.classifyLine(l, commentLineStarterCharacters));
-    const lineClassificationsNotation = lineClassifications.join('');
+  //   const lineClassifications = lines.map(l => this.classifyLine(l, commentLineStarterCharacters));
+  //   const lineClassificationsNotation = lineClassifications.join('');
 
-    const regex = /(c+((e|c)*)c+)/gm;
+  //   const regex = /(c+((e|c)*)c+)/gm;
 
-    const allMatches = lineClassificationsNotation.matchAll(regex);
-    let next = allMatches.next();
+  //   const allMatches = lineClassificationsNotation.matchAll(regex);
+  //   let next = allMatches.next();
 
-    while (!next.done) {
-      const lineNumber = next.value.index! + 1;
-      const sectionLength = next.value[0].length;
+  //   while (!next.done) {
+  //     const lineNumber = next.value.index! + 1;
+  //     const sectionLength = next.value[0].length;
 
-      const commentSection = {
-        startLineNumber: lineNumber,
-        endLineNumber: lineNumber + sectionLength - 1,
-      } as IPrintStatementSection;
+  //     const commentSection = {
+  //       startLineNumber: lineNumber,
+  //       endLineNumber: lineNumber + sectionLength - 1,
+  //     } as IPrintStatementSection;
 
-      commentSections.push(commentSection);
-      next = allMatches.next();
-    }
+  //     commentSections.push(commentSection);
+  //     next = allMatches.next();
+  //   }
 
-    return commentSections;
-  };
+  //   return commentSections;
+  // };
 
 
-  hasCommentSectionFilter = (commentSectionFinderResult: IPrintStatementSectionFinderResult): boolean => {
-    // const toKeep = commentSectionFinderResult.totalLineCount >= 100;
-    // return toKeep;
-    return true;
-  };
+  // hasCommentSectionFilter = (commentSectionFinderResult: IPrintStatementSectionFinderResult): boolean => {
+  //   // const toKeep = commentSectionFinderResult.totalLineCount >= 100;
+  //   // return toKeep;
+  //   return true;
+  // };
 }
