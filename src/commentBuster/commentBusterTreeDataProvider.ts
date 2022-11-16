@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
+import { ICommentSection, ICommentSectionFinderResult } from '../commentBusterInterfaces';
 import { ILanguageConfiguration } from '../LanguageConfigurations';
-import { ICommentSection, ICommentSectionFinderResult, WorkspaceCommentSectionsFinder } from '../WorkspaceCommentSectionsFinder';
+import { WorkspaceSectionsFinder } from '../WorkspaceSectionsFinder';
 
 
 type CbTreeFileResult = {
@@ -30,7 +31,7 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
 
   refresh = async (languageConfiguration: ILanguageConfiguration) => {
 
-    const commentSectionsFinder = new WorkspaceCommentSectionsFinder();
+    const commentSectionsFinder = new WorkspaceSectionsFinder();
     const commentSectionResults = await commentSectionsFinder.findCommentSections(languageConfiguration);
 
     const commentSectionData = commentSectionResults

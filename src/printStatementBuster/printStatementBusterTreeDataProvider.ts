@@ -1,18 +1,19 @@
 import * as vscode from 'vscode';
 import { ILanguageConfiguration } from '../LanguageConfigurations';
-import { ICommentSection, ICommentSectionFinderResult, WorkspaceCommentSectionsFinder } from '../WorkspaceCommentSectionsFinder';
+import { IPrintStatementSection, IPrintStatementSectionFinderResult } from '../printStatementBusterInterfaces';
+import { WorkspaceSectionsFinder } from '../WorkspaceSectionsFinder';
 
 
 type PsbTreeFileResult = {
-  cbDataType: 'fileResult'
-  resultData: ICommentSectionFinderResult
+  psbDataType: 'fileResult'
+  resultData: IPrintStatementSectionFinderResult
   children: PsbCommenSection[]
 };
 
 
 type PsbCommenSection = {
-  cbDataType: 'commentSection'
-  commentSection: ICommentSection
+  psbDataType: 'printStatementSection'
+  printStatementSection: IPrintStatementSection
   parent: PsbTreeFileResult
 };
 
@@ -30,21 +31,21 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 
   refresh = async (languageConfiguration: ILanguageConfiguration) => {
 
-    const commentSectionsFinder = new WorkspaceCommentSectionsFinder();
-    const commentSectionResults = await commentSectionsFinder.findCommentSections(languageConfiguration);
+    const printStatementSectionsFinder = new WorkspaceSectionsFinder();
+    const printStatementSectionResults = await printStatementSectionsFinder.findPrintStatementSections(languageConfiguration);
 
-    const commentSectionData = commentSectionResults
-      .filter(r => r.commentSections.length > 0)
+    const printStatementSectionData = printStatementSectionResults
+      .filter(r => r.printStatementSections.length > 0)
       .map(r => {
-        const sections = r.commentSections.map(s => {
+        const sections = r.printStatementSections.map(s => {
           return {
-            cbDataType: 'commentSection',
-            commentSection: s,
+            psbDataType: 'printStatementSection',
+            printStatementSection: s,
           } as PsbCommenSection;
         });
 
         const sourceDatum = {
-          cbDataType: 'fileResult',
+          psbDataType: 'fileResult',
           resultData: r,
           children: sections,
         } as PsbTreeFileResult;
@@ -56,7 +57,7 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
         return sourceDatum;
       });
 
-    this.sourceData = commentSectionData;
+    this.sourceData = printStatementSectionData;
 
     this._onDidChangeTreeData.fire();
   };
@@ -76,11 +77,11 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
   };
 
   getCommentSectionTreeItem = (item: PsbCommenSection): vscode.TreeItem => {
-    const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.commentSection.startLineNumber}`, true);
+    const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.printStatementSection.startLineNumber}`, true);
 
     const fileLocation = item.parent.resultData.fileUri;
 
-    const commentRange = new vscode.Range(item.commentSection.startLineNumber - 1, 0, item.commentSection.endLineNumber, 0);
+    const commentRange = new vscode.Range(item.printStatementSection.startLineNumber - 1, 0, item.printStatementSection.endLineNumber, 0);
 
     const command = {
 			command: 'vscode.open',
@@ -95,7 +96,7 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 
     return {
       label: /**vscode.TreeItemLabel**/<any>{ 
-        label: `Lines ${item.commentSection.startLineNumber} - ${item.commentSection.endLineNumber}`,
+        label: `Lines ${item.printStatementSection.startLineNumber} - ${item.printStatementSection.endLineNumber}`,
       },
       tooltip,
       collapsibleState: vscode.TreeItemCollapsibleState.None,
@@ -106,8 +107,8 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 
 
   getTreeItem(element: PsbTreeNode): vscode.TreeItem {
-    switch (element.cbDataType) {
-      case 'commentSection':
+    switch (element.psbDataType) {
+      case 'printStatementSection':
         return this.getCommentSectionTreeItem(element);
       case 'fileResult':
         return this.getFileResultTreeItem(element);
@@ -115,7 +116,7 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
   }
 
   getParent = (item: PsbTreeNode): PsbTreeNode | undefined => {
-    if (item.cbDataType === 'fileResult') {
+    if (item.psbDataType === 'fileResult') {
       return undefined;
     }
 
@@ -127,7 +128,7 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
       return this.sourceData;
     }
 
-    if (element.cbDataType === 'fileResult') {
+    if (element.psbDataType === 'fileResult') {
       return element.children;
     }
 

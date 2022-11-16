@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-// import _ from 'lodash';
+import { ICommentSection, ICommentSectionFinderResult, ICommentSectionFinderResultForProgrammingLanguage } from '../commentBusterInterfaces';
 const _ = require('lodash');
-import { ICommentSection, ICommentSectionFinderResult, ICommentSectionFinderResultForProgrammingLanguage } from '../WorkspaceCommentSectionsFinder';
+
 
 
 type LineClassifications = 
