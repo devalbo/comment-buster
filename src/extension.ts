@@ -28,12 +28,6 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage('Creating CommentBusterPanel');
     }
 
-    // const config = vscode.workspace.getConfiguration('comment-buster').get('directories');
-    // const config = vscode.workspace.getConfiguration('commentBuster.directories');
-    // console.log("PLUGIN CONFIG");
-    // console.log(config);
-    // console.log(config.get("commentBuster"));
-
     return _commentBusterPanel;
   };
 
@@ -46,25 +40,12 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World 2 from comment-buster!');
 
-    // if (!_commentBusterPanel) {
-    //   const commentBusterPanel = new CommentBusterPanel(context);
-    //   _commentBusterPanel = commentBusterPanel;
-    //   vscode.window.showInformationMessage('Creating CommentBusterPanel');
-    // }
-
     const commentBusterPanel = initPanel();
     commentBusterPanel.refreshTreeView(TypeScriptLanguageConfiguration);
 	});
 
   _bustemCommandPython = vscode.commands.registerCommand('comment-buster.bustem-python', async () => {
 		vscode.window.showInformationMessage('Refresh comment-buster for Python!');
-
-    // if (_commentBusterPanel) {
-    //   // _commentBusterPanel.bustComments();
-    //   _commentBusterPanel.refreshTreeView();
-    // } else {
-    //   vscode.window.showInformationMessage('CommentBusterPanel is not active');
-    // }
 
     const commentBusterPanel = initPanel();
     commentBusterPanel.refreshTreeView(PythonLanguageConfiguration);
