@@ -10,9 +10,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:comment-buster.bustem-typescript",
-    "onCommand:comment-buster.bustem-python",
-    "onCommand:comment-buster.bustem-clangs"
+    "onCommand:comment-buster.bust-comments-typescript",
+    "onCommand:comment-buster.bust-comments-python",
+    "onCommand:comment-buster.bust-comments-clangs",
+    "onCommand:comment-buster.bust-printstatements-typescript",
+    "onCommand:comment-buster.bust-printstatements-python",
+    "onCommand:comment-buster.bust-printstatements-clangs"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -86,20 +89,28 @@
     },
     "commands": [
       {
-        "command": "comment-buster.bustem-python",
+        "command": "comment-buster.bust-comments-python",
         "title": "Bust Comments - Python Files"
       },
       {
-        "command": "comment-buster.bustem-typescript",
+        "command": "comment-buster.bust-comments-typescript",
         "title": "Bust Comments - TypeScript Files"
       },
       {
-        "command": "comment-buster.bustem-clangs",
+        "command": "comment-buster.bust-comments-clangs",
         "title": "Bust Comments - C/C++ Files"
       },
       {
-        "command": "comment-buster.bustem2",
-        "title": "Backup/Extra Bustin'"
+        "command": "comment-buster.bust-printstatements-python",
+        "title": "Bust Print Statements - Python Files"
+      },
+      {
+        "command": "comment-buster.bust-printstatements-typescript",
+        "title": "Bust Print Statements - TypeScript Files"
+      },
+      {
+        "command": "comment-buster.bust-printstatements-clangs",
+        "title": "Bust Print Statements - C/C++ Files"
       }
     ]
   },

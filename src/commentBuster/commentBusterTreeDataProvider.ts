@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { ILanguageConfiguration } from './LanguageConfigurations';
-import { ICommentSection, ICommentSectionFinderResult, WorkspaceCommentSectionsFinder } from './WorkspaceCommentSectionsFinder';
+import { ILanguageConfiguration } from '../LanguageConfigurations';
+import { ICommentSection, ICommentSectionFinderResult, WorkspaceCommentSectionsFinder } from '../WorkspaceCommentSectionsFinder';
 
 
 type CbTreeFileResult = {

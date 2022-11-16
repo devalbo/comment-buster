@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CommentSectionsFinder } from "./CommentSectionsFinder";
+import { CommentSectionsFinder } from "./commentBuster/CommentSectionsFinder";
 import { ILanguageConfiguration } from './LanguageConfigurations';
 
 

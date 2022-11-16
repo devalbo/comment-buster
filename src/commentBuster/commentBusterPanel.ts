@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CbTreeNode, CommentBusterTreeDataProvider } from './commentBusterTreeDataProvider';
-import { ILanguageConfiguration } from './LanguageConfigurations';
+import { ILanguageConfiguration } from '../LanguageConfigurations';
 
 
 export class CommentBusterPanel {
