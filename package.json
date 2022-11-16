@@ -16,6 +16,47 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "CommentBuster",
+      "properties": {
+        "comment-buster.typescript.directoriesToExclude": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "**/node_modules/**\n",
+          "description": "Glob patterns to exclude when looking for comments in TypeScript files to bust."
+        },
+        "comment-buster.clangs.directoriesToExclude": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "**/.pio/**\n",
+          "description": "Glob patterns to exclude when looking for comments in C/C++ files to bust."
+        },
+        "comment-buster.python.directoriesToExclude": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "\n",
+          "description": "Glob patterns to exclude when looking for comments in Python to bust."
+        },
+        "comment-buster.typescript.printStatementLineRegexes": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "conso\n",
+          "description": "Regular expressions to use when looking for print statements in your TypeScript files."
+        },
+        "comment-buster.clangs.printStatementLineRegexes": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "**/.pio/**\n",
+          "description": "Regular expressions to use when looking for print statements in your C/C++ files."
+        },
+        "comment-buster.python.printStatementLineRegexes": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "\n",
+          "description": "Regular expressions to use when looking for print statements in your Python files."
+        }
+      }
+    },
     "views": {
       "explorer": [
 				{

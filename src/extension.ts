@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { CommentBusterPanel } from './commentBusterPanel';
-import { C_Cplusplus_LanguageConfiguration, PythonLanguageConfiguration, TypeScriptLanguageConfiguration } from './LanguageConfigurations';
+import { CLangs_LanguageConfiguration, PythonLanguageConfiguration, TypeScriptLanguageConfiguration } from './LanguageConfigurations';
 
 
 
@@ -27,6 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
       _commentBusterPanel = commentBusterPanel;
       vscode.window.showInformationMessage('Creating CommentBusterPanel');
     }
+
+    const config = vscode.workspace.getConfiguration('comment-buster').get('directories');
+    // const config = vscode.workspace.getConfiguration('commentBuster.directories');
+    console.log("PLUGIN CONFIG");
+    console.log(config);
+    // console.log(config.get("commentBuster"));
+
     return _commentBusterPanel;
   };
 
@@ -67,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Refresh comment-buster for C/C++!');
 
     const commentBusterPanel = initPanel();
-    commentBusterPanel.refreshTreeView(C_Cplusplus_LanguageConfiguration);
+    commentBusterPanel.refreshTreeView(CLangs_LanguageConfiguration);
 	});
 
 	context.subscriptions.push(_bustemCommandTypeScript);

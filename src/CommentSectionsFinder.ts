@@ -33,8 +33,8 @@ export class CommentSectionsFinder implements ICommentSectionFinderResultForProg
   createCommentSectionFinderResultForFile = async (fileUri: vscode.Uri, commentLineStarterCharacters: string[]): Promise<ICommentSectionFinderResult> => {
 
     try {
-      console.log("createCommentSectionFinderResultForFile");
-      console.log(fileUri);
+      // console.log("createCommentSectionFinderResultForFile");
+      // console.log(fileUri);
 
       const tsContent = await vscode.workspace.openTextDocument(fileUri);
       if (!tsContent) {

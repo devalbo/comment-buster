@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { SupportedProgrammingLanguages } from "./constants";
 import { CommentSectionsFinder } from "./CommentSectionsFinder";
 import { ILanguageConfiguration } from './LanguageConfigurations';
 
@@ -20,62 +19,69 @@ export interface ICommentSectionFinderResult {
 
 export interface ICommentSectionFinderResultForProgrammingLanguage {
   findCommentSections(fileUris: vscode.Uri[], commentLineStarterCharacters: string[]): Promise<ICommentSectionFinderResult[]>
-  // findCommentSections(languageConfiguration: ILanguageConfiguration): Promise<ICommentSectionFinderResult[]>  
 }
 
 
 export interface ICommentSectionsFinder {
-  // findCommentSections(fileExtension: string, language: SupportedProgrammingLanguages): Promise<ICommentSectionFinderResult[]>
   findCommentSections(languageConfiguration: ILanguageConfiguration): Promise<ICommentSectionFinderResult[]>  
 }
 
 
+// based on https://stackoverflow.com/a/69534630
+// function setsIntersection(...sets) {
+const setsIntersection = (sets: Set<vscode.Uri>[]): Set<vscode.Uri> => {
+  if (sets.length < 1) {
+    return new Set();
+  }
+
+  let minSize = sets[0].size;
+  let minSetIndex = 0;
+
+  for (let i = 1; i < sets.length; i++) {
+    const size = sets[i].size;
+    if (size < minSize) {
+      minSize = size;
+      minSetIndex = i;
+    }
+  }
+
+  const result = new Set(sets[minSetIndex]);
+  for (let i = 1; i < sets.length && i !== minSetIndex; i++) {
+    for (const v of result) {
+      if (!sets[i].has(v)) {
+        result.delete(v);
+      }
+    }
+  }
+
+  return result;
+};
+
+
 export class WorkspaceCommentSectionsFinder implements ICommentSectionsFinder {
   
-  // findCommentSections = async (fileExtension: string, language: SupportedProgrammingLanguages): Promise<ICommentSectionFinderResult[]> => {
   findCommentSections = async (languageConfiguration: ILanguageConfiguration): Promise<ICommentSectionFinderResult[]> => {
 
     const x = vscode.workspace.workspaceFolders?.map(folder => folder.uri.path);
-    console.log("FS COMMENT SECTION");
-    console.log(x);
-    console.log(languageConfiguration);
-
     const languageFiles: vscode.Uri[] = [];
 
-    
-    // const allResultTasks = fileUris.map(async x => 
-    //   this.createCommentSectionFinderResultForFile(x, commentLineStarterCharacters));
-    
-    // console.log("SECTION 1");
-    // console.log(allResultTasks);
+    const globPatternToInclude = languageConfiguration.getGlobPatternToInclude();
+    const globPatternsToExclude = languageConfiguration.getGlobPatternsToExclude();
 
-    // const allResults = await Promise.all(allResultTasks);
-
-    const globPatternToExclude = languageConfiguration.globPatternToExclude;
-    const findFileTasks = languageConfiguration.fileExtensions.map(async fileExtension => {
-      const extensionFiles = await vscode.workspace.findFiles(`**/*.${fileExtension}`, globPatternToExclude);
-      return extensionFiles;
-      // console.log("EXTENSION FILES");
-      // console.log(extensionFiles);
+    const findFileTasks = globPatternsToExclude.map(async globPatternToExclude => {
+      const someFiles = await vscode.workspace.findFiles(globPatternToInclude, globPatternToExclude);
+      return new Set(someFiles);
     });
 
     const allFindFileResults = await Promise.all(findFileTasks);
+    const combinedFindFileResults = setsIntersection(allFindFileResults);
 
-    allFindFileResults.forEach(r => {
-      languageFiles.push(...r);
+    combinedFindFileResults.forEach(r => {
+      languageFiles.push(r);
     });
 
-    console.log("LANGUAGE FILES");
-    console.log(languageFiles);
-
     const tsFinder = new CommentSectionsFinder();
-    return tsFinder.findCommentSections(languageFiles, languageConfiguration.commentCharacters);
-
-    // switch (language) {
-    //   case 'ts': {
-    //     const tsFinder = new CommentSectionsFinder();
-    //     return tsFinder.findCommentSections(languageFiles, languageConfiguration.commentCharacters);
-    //   }
-    // }
+    const commentSections = tsFinder.findCommentSections(languageFiles, languageConfiguration.commentCharacters);
+    return commentSections;
   };
 }
