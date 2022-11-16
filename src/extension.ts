@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { CommentBusterPanel } from './commentBusterPanel';
-import { CLangs_LanguageConfiguration, PythonLanguageConfiguration, TypeScriptLanguageConfiguration } from './LanguageConfigurations';
+import { cLangsLanguageConfiguration, pythonLanguageConfiguration, typeScriptLanguageConfiguration } from './LanguageConfigurations';
 
 
 
@@ -19,7 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "comment-buster" is now active!');
-  console.log ("Activating extension");
 
   const initPanel = (): CommentBusterPanel => {
     if (!_commentBusterPanel) {
@@ -41,21 +40,21 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World 2 from comment-buster!');
 
     const commentBusterPanel = initPanel();
-    commentBusterPanel.refreshTreeView(TypeScriptLanguageConfiguration);
+    commentBusterPanel.refreshTreeView(typeScriptLanguageConfiguration);
 	});
 
   _bustemCommandPython = vscode.commands.registerCommand('comment-buster.bustem-python', async () => {
 		vscode.window.showInformationMessage('Refresh comment-buster for Python!');
 
     const commentBusterPanel = initPanel();
-    commentBusterPanel.refreshTreeView(PythonLanguageConfiguration);
+    commentBusterPanel.refreshTreeView(pythonLanguageConfiguration);
 	});
 
   _bustemCommandCLangs = vscode.commands.registerCommand('comment-buster.bustem-clangs', async () => {
 		vscode.window.showInformationMessage('Refresh comment-buster for C/C++!');
 
     const commentBusterPanel = initPanel();
-    commentBusterPanel.refreshTreeView(CLangs_LanguageConfiguration);
+    commentBusterPanel.refreshTreeView(cLangsLanguageConfiguration);
 	});
 
 	context.subscriptions.push(_bustemCommandTypeScript);

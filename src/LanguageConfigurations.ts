@@ -19,10 +19,10 @@ const _getGlobPatternsToExclude = (configKey: string) => {
     .filter(l => l.length > 0);
 
   return globPatternsToExclude;
-}
+};
 
 
-export const TypeScriptLanguageConfiguration: ILanguageConfiguration = {
+export const typeScriptLanguageConfiguration: ILanguageConfiguration = {
   commentCharacters: ['//', ],
   getGlobPatternToInclude: () => '**/*.ts',
   getGlobPatternsToExclude(): string[] {
@@ -30,7 +30,7 @@ export const TypeScriptLanguageConfiguration: ILanguageConfiguration = {
   }
 };
 
-export const CLangs_LanguageConfiguration: ILanguageConfiguration = {
+export const cLangsLanguageConfiguration: ILanguageConfiguration = {
   commentCharacters: ['//', ],
   getGlobPatternToInclude: () => '**/*.{c,cpp,h}',
   getGlobPatternsToExclude(): string[] {
@@ -38,7 +38,7 @@ export const CLangs_LanguageConfiguration: ILanguageConfiguration = {
   }
 };
 
-export const PythonLanguageConfiguration: ILanguageConfiguration = {
+export const pythonLanguageConfiguration: ILanguageConfiguration = {
   commentCharacters: ['#', ],
   getGlobPatternToInclude: () => '**/*.py',
   getGlobPatternsToExclude(): string[] {
