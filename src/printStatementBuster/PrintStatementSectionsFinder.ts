@@ -40,34 +40,21 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
         console.log("NO CONTENT - " + fileUri.toString());
       }
 
-      const tsLines = _
+      const lines = _
         .range(tsContent.lineCount)
         .map((x: number) => tsContent.lineAt(x).text as string) as string[];
 
-      return this.createPrintStatementSectionFinderResultForLines(fileUri, tsLines, printStatementLineRegexes);
-  
-    } catch (e) {
-      return {
-        fileUri,
-        totalLineCount: 0,
-        printStatementSections: [],
-      };
-    }
-  };
-
-  
-  createPrintStatementSectionFinderResultForLines = async (fileUri: vscode.Uri, lines: string[], printStatementLineRegexes: string[]): Promise<IPrintStatementSectionFinderResult> => {
-
-    try {
-      const lineCount = lines.length;
+      // return this.createPrintStatementSectionFinderResultForLines(fileUri, tsLines, printStatementLineRegexes);
+      // const lineCount = lines.length;
       // const printStatementSections = this.findPrintStatementSectionsForLines(lines, commentLineStarterCharacters);
       const regexMatchLinesSections = findMatchingRegexSectionsForLines(lines, printStatementLineRegexes);
-  
+
       return {
         fileUri,
-        totalLineCount: lineCount,
+        totalLineCount: lines.length,
         printStatementSections: regexMatchLinesSections,
       };
+      
     } catch (e) {
       return {
         fileUri,
@@ -76,6 +63,28 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
       };
     }
   };
+
+  
+  // createPrintStatementSectionFinderResultForLines = async (fileUri: vscode.Uri, lines: string[], printStatementLineRegexes: string[]): Promise<IPrintStatementSectionFinderResult> => {
+
+  //   try {
+  //     const lineCount = lines.length;
+  //     // const printStatementSections = this.findPrintStatementSectionsForLines(lines, commentLineStarterCharacters);
+  //     const regexMatchLinesSections = findMatchingRegexSectionsForLines(lines, printStatementLineRegexes);
+  
+  //     return {
+  //       fileUri,
+  //       totalLineCount: lineCount,
+  //       printStatementSections: regexMatchLinesSections,
+  //     };
+  //   } catch (e) {
+  //     return {
+  //       fileUri,
+  //       totalLineCount: 0,
+  //       printStatementSections: [],
+  //     };
+  //   }
+  // };
 
   // classifyLine = (currentLine: string, commentLineStarterCharacters: string[]): PsbLineClassifications => {
   //   const text = currentLine.trim();

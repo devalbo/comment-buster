@@ -1,4 +1,3 @@
-import { IPrintStatementSection } from "../printStatementBusterInterfaces";
 import { IRegexMatchLinesSection } from "./regexBusterInterfaces";
 
 
@@ -29,30 +28,37 @@ export const classifyLine = (currentLine: string, regexesToMatch: string[]): Rfl
 };
 
 
-export const findMatchingRegexSectionsForLines = (lines: string[], regexesToMatch: string[]): IRegexMatchLinesSection[] => {
-  
-  const commentSections: IPrintStatementSection[] = [];
-
-  const lineClassifications = lines.map(l => classifyLine(l, regexesToMatch));
+export const matchLineClassifications = (lineClassifications: RflmLineClassifications[]): IRegexMatchLinesSection[] => {
   const lineClassificationsNotation = lineClassifications.join('');
 
-  const regex = /(c+((e|c)*)c+)/gm;
+  // const regex = /(m+e*m+)|(m+)/gm;
+  const regex = /(m+(e*m+)*)|(m+)/gm;
 
   const allMatches = lineClassificationsNotation.matchAll(regex);
+
+  const regexSections: IRegexMatchLinesSection[] = [];
   let next = allMatches.next();
 
   while (!next.done) {
     const lineNumber = next.value.index! + 1;
     const sectionLength = next.value[0].length;
-
-    const commentSection = {
+    
+    const regexSection = {
       startLineNumber: lineNumber,
       endLineNumber: lineNumber + sectionLength - 1,
-    } as IPrintStatementSection;
+    } as IRegexMatchLinesSection;
 
-    commentSections.push(commentSection);
+    regexSections.push(regexSection);
     next = allMatches.next();
   }
 
-  return commentSections;
+  return regexSections;
+};
+
+
+export const findMatchingRegexSectionsForLines = (lines: string[], regexesToMatch: string[]): IRegexMatchLinesSection[] => {
+  
+  const lineClassifications = lines.map(l => classifyLine(l, regexesToMatch));
+  const matchLineSections = matchLineClassifications(lineClassifications);
+  return matchLineSections;
 };

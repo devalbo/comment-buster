@@ -33,6 +33,8 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 
     const printStatementSectionsFinder = new WorkspaceSectionsFinder();
     const printStatementSectionResults = await printStatementSectionsFinder.findPrintStatementSections(languageConfiguration);
+    console.log("PRINST STATEMENT SECTION RESULTS: " + printStatementSectionResults.length);
+    console.log(printStatementSectionResults);
 
     const printStatementSectionData = printStatementSectionResults
       .filter(r => r.printStatementSections.length > 0)
@@ -58,6 +60,8 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
       });
 
     this.sourceData = printStatementSectionData;
+    console.log("DATA");
+    console.log(this.sourceData);
 
     this._onDidChangeTreeData.fire();
   };
