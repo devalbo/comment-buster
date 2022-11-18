@@ -56,6 +56,7 @@ export class PrintStatementSectionsFinder implements IPrintStatementSectionFinde
       };
       
     } catch (e) {
+      console.error(e);
       return {
         fileUri,
         totalLineCount: 0,

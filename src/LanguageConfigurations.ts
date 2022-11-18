@@ -27,7 +27,7 @@ const _getGlobPatternsToExclude = (configKey: string) => {
 export const typeScriptLanguageConfiguration: ILanguageConfiguration = {
   commentCharacters: ['//', ],
   // printStatementLineRegexes: ['.*(console\.log\().*'],
-  printStatementLineRegexes: [`.*console\.log\(.*.*`],
+  printStatementLineRegexes: [`.*console\\.log\\(.*`],
 
   getGlobPatternToInclude: () => '**/*.ts',
   getGlobPatternsToExclude: () => _getGlobPatternsToExclude('typescript.directoriesToExclude'),

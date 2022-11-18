@@ -1,5 +1,3 @@
-
-// import { assert } from 'console';
 import * as assert from 'assert';
 import { IRegexMatchLinesSection } from '../../regexMatchBuster/regexBusterInterfaces';
 import { RflmLineClassifications, classifyLine, findMatchingRegexSectionsForLines, matchLineClassifications } from '../../regexMatchBuster/RegexesForLinesMatcher';
