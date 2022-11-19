@@ -30,9 +30,6 @@ export class WorkspaceSectionsFinder implements ICommentSectionsFinder, IPrintSt
 
     const fileCandidates = await findFileCandidates(globPatternToInclude, globPatternsToExclude);
 
-    console.log("PRINT STATEMENT REGEXES");
-    console.log(languageConfiguration.printStatementLineRegexes);
-
     const tsFinder = new PrintStatementSectionsFinder();
     const printStatementSections = await tsFinder.findPrintStatementSections(fileCandidates, languageConfiguration.printStatementLineRegexes);
     

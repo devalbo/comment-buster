@@ -12,31 +12,18 @@ type LineClassifications =
 export class CommentSectionsFinder implements ICommentSectionFinderResultForProgrammingLanguage {
  
   findCommentSections = async (fileUris: vscode.Uri[], commentLineStarterCharacters: string[]): Promise<ICommentSectionFinderResult[]> => {
-    console.log("FINDING TS COMMENT SECTIONS");
-    
     const allResultTasks = fileUris.map(async x => 
       this.createCommentSectionFinderResultForFile(x, commentLineStarterCharacters));
-    
-    console.log("SECTION 1");
-    console.log(allResultTasks);
 
     const allResults = await Promise.all(allResultTasks);
 
-    console.log("SECTION 2");
-
-    const resultsWithCommentSections = allResults.filter(this.hasCommentSectionFilter);
-
-    console.log("DONE WQITH RESULTS");
-    return resultsWithCommentSections;
+    return allResults;
   };
 
   createCommentSectionFinderResultForFile = async (fileUri: vscode.Uri, commentLineStarterCharacters: string[]): Promise<ICommentSectionFinderResult> => {
 
     try {
       const tsContent = await vscode.workspace.openTextDocument(fileUri);
-      if (!tsContent) {
-        console.log("NO CONTENT - " + fileUri.toString());
-      }
 
       const tsLines = _
         .range(tsContent.lineCount)
@@ -120,12 +107,5 @@ export class CommentSectionsFinder implements ICommentSectionFinderResultForProg
     }
 
     return commentSections;
-  };
-
-
-  hasCommentSectionFilter = (commentSectionFinderResult: ICommentSectionFinderResult): boolean => {
-    // const toKeep = commentSectionFinderResult.totalLineCount >= 100;
-    // return toKeep;
-    return true;
   };
 }
