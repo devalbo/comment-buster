@@ -19,9 +19,9 @@ const activateCommentBusterPanel = (context: vscode.ExtensionContext) => {
     if (!_commentBusterPanel) {
       const commentBusterPanel = new CommentBusterPanel(context);
       _commentBusterPanel = commentBusterPanel;
-      vscode.window.showInformationMessage('Creating CommentBusterPanel');
     }
 
+    vscode.commands.executeCommand("commentBusterPanel.focus");
     return _commentBusterPanel;
   };
 
@@ -31,22 +31,17 @@ const activateCommentBusterPanel = (context: vscode.ExtensionContext) => {
 	_bustemCommandTypeScript = vscode.commands.registerCommand('comment-buster.bust-comments-typescript', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World 2 from comment-buster!');
 
     const commentBusterPanel = initCommentBusterPanel();
     commentBusterPanel.refreshTreeView(typeScriptLanguageConfiguration);
 	});
 
   _bustemCommandPython = vscode.commands.registerCommand('comment-buster.bust-comments-python', async () => {
-		vscode.window.showInformationMessage('Refresh comment-buster for Python!');
-
     const commentBusterPanel = initCommentBusterPanel();
     commentBusterPanel.refreshTreeView(pythonLanguageConfiguration);
 	});
 
   _bustemCommandCLangs = vscode.commands.registerCommand('comment-buster.bust-comments-clangs', async () => {
-		vscode.window.showInformationMessage('Refresh comment-buster for C/C++!');
-
     const commentBusterPanel = initCommentBusterPanel();
     commentBusterPanel.refreshTreeView(cLangsLanguageConfiguration);
 	});
@@ -77,9 +72,9 @@ const activatePrintStatementBusterPanel = (context: vscode.ExtensionContext) => 
     if (!_printStatementBusterPanel) {
       const printStatementBusterPanel = new PrintStatementBusterPanel(context);
       _printStatementBusterPanel = printStatementBusterPanel;
-      vscode.window.showInformationMessage('Creating PrintStatementBusterPanel');
     }
 
+    vscode.commands.executeCommand("printStatementBusterPanel.focus");
     return _printStatementBusterPanel;
   };
 
@@ -118,18 +113,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "comment-buster" is now active!');
 
   activateCommentBusterPanel(context);
   activatePrintStatementBusterPanel(context);
-
-  console.log("Activation complete");
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-  vscode.window.showInformationMessage('Deactivating comment buster plugin');
-
   deactivateCommentBusterPanel();
   deactivatePrintStatementBusterPanel();
 }

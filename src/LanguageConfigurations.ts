@@ -31,7 +31,6 @@ export const typeScriptLanguageConfiguration: ILanguageConfiguration = {
 };
 
 
-
 export const cLangsLanguageConfiguration: ILanguageConfiguration = {
   commentCharacters: ['//', ],
   printStatementLineRegexes: [],

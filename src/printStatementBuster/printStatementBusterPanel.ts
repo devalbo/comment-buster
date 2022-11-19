@@ -9,8 +9,6 @@ export class PrintStatementBusterPanel {
   readonly _treeDataProvider: PrintStatementBusterTreeDataProvider;
 
 	constructor(context: vscode.ExtensionContext) {
-    console.log("Creating Print Statement Buster Panel");
-
     this._treeDataProvider = new PrintStatementBusterTreeDataProvider();
     
 		const view = vscode.window.createTreeView('printStatementBusterPanel', 
@@ -23,8 +21,6 @@ export class PrintStatementBusterPanel {
 	}
 
   refreshTreeView = async (languageConfiguration: ILanguageConfiguration) => {
-    console.log("REFRESH PRINT STATEMENT BUSTER PANEL TREE VIEW");
-
     this._treeDataProvider.refresh(languageConfiguration);
   };
 }
