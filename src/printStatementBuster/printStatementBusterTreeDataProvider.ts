@@ -98,9 +98,13 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 			]
 		} as vscode.Command;
 
+    const label = item.printStatementSection.startLineNumber === item.printStatementSection.endLineNumber ? 
+      `Line ${item.printStatementSection.startLineNumber}` :
+      `Lines ${item.printStatementSection.startLineNumber} - ${item.printStatementSection.endLineNumber}`;
+
     return {
       label: /**vscode.TreeItemLabel**/<any>{ 
-        label: `Lines ${item.printStatementSection.startLineNumber} - ${item.printStatementSection.endLineNumber}`,
+        label,
       },
       tooltip,
       collapsibleState: vscode.TreeItemCollapsibleState.None,
