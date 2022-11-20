@@ -47,3 +47,18 @@ export const findFileCandidates = async (globPatternToInclude: string, globPatte
 
   return fileCandidates;
 };
+
+
+export const getTooltipForLines = (lines: string[], startLineNumber: number, endLineNumber: number) => {
+  
+  // const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.commentSection.startLineNumber}`, true);
+  const tooltipLines = [];
+  for (let i=startLineNumber-1; i < endLineNumber; i++) {
+    tooltipLines.push(lines[i]);
+  }
+
+  const mdString = tooltipLines.join('\n\n');
+  const tooltip = new vscode.MarkdownString("```\n" + mdString + "\n```");
+
+  return tooltip;
+};

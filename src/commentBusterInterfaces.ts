@@ -10,7 +10,8 @@ export interface ICommentSection {
 
 export interface ICommentSectionFinderResult {
   fileUri: vscode.Uri
-  totalLineCount: number
+  fileLines: string[]
+  // totalLineCount: number
   commentSections: ICommentSection[]
 }
 

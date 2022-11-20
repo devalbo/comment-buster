@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ICommentSection, ICommentSectionFinderResult } from '../commentBusterInterfaces';
 import { ILanguageConfiguration } from '../LanguageConfigurations';
+import { getTooltipForLines } from '../utils';
 import { WorkspaceSectionsFinder } from '../WorkspaceSectionsFinder';
 
 
@@ -64,20 +65,23 @@ export class CommentBusterTreeDataProvider implements vscode.TreeDataProvider<Cb
 
 
   getFileResultTreeItem = (item: CbTreeFileResult): vscode.TreeItem => {
-    const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.resultData.fileUri.toString()}`, true);
+    // const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.resultData.fileUri.toString()}`, true);
+    const fileLabel = item.resultData.fileUri.fsPath;
 
     return {
       label: /**vscode.TreeItemLabel**/<any>{ 
-        label: item.resultData.fileUri.toString(), 
+        label: fileLabel,
       },
-      tooltip,
+      // tooltip,
       collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
     };
 
   };
 
   getCommentSectionTreeItem = (item: CbCommenSection): vscode.TreeItem => {
-    const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.commentSection.startLineNumber}`, true);
+    // const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.commentSection.startLineNumber}`, true);
+    const lines = item.parent.resultData.fileLines;
+    const tooltip = getTooltipForLines(lines, item.commentSection.startLineNumber, item.commentSection.endLineNumber);
 
     const fileLocation = item.parent.resultData.fileUri;
 

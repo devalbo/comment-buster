@@ -64,13 +64,15 @@ export class PrintStatementBusterTreeDataProvider implements vscode.TreeDataProv
 
 
   getFileResultTreeItem = (item: PsbTreeFileResult): vscode.TreeItem => {
-    const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.resultData.fileUri.toString()}`, true);
+    // const tooltip = new vscode.MarkdownString(`$(zap) Tooltip for ${item.resultData.fileUri.fsPath}`, true);
+    // const fileLabel = item.resultData.fileUri.toString();
+    const fileLabel = item.resultData.fileUri.fsPath;
 
     return {
       label: /**vscode.TreeItemLabel**/<any>{ 
-        label: item.resultData.fileUri.toString(), 
+        label: fileLabel, 
       },
-      tooltip,
+      // tooltip,
       collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
     };
 

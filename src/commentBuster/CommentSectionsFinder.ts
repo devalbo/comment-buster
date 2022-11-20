@@ -34,7 +34,8 @@ export class CommentSectionsFinder implements ICommentSectionFinderResultForProg
     } catch (e) {
       return {
         fileUri,
-        totalLineCount: 0,
+        fileLines: [],
+        // totalLineCount: 0,
         commentSections: [],
       };
     }
@@ -45,18 +46,20 @@ export class CommentSectionsFinder implements ICommentSectionFinderResultForProg
   createCommentSectionFinderResultForLines = async (fileUri: vscode.Uri, lines: string[], commentLineStarterCharacters: string[]): Promise<ICommentSectionFinderResult> => {
 
     try {
-      const lineCount = lines.length;
+      // const lineCount = lines.length;
       const commentSections = this.findCommentSectionsForLines(lines, commentLineStarterCharacters);
   
       return {
         fileUri,
-        totalLineCount: lineCount,
+        fileLines: lines,
+        // totalLineCount: lineCount,
         commentSections
       };
     } catch (e) {
       return {
         fileUri,
-        totalLineCount: 0,
+        fileLines: lines,
+        // totalLineCount: 0,
         commentSections: [],
       };
     }
