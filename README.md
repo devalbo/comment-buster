@@ -1,4 +1,4 @@
-
+# Comment-buster
 Comment-buster is a VS Code extension that searches through code files for chunks of commented out code and extraneous print statements (per language I use - TypeScript, Python, or C/C++). It then shows a report panel with those sections called out. This way, you can delete those lines so you don't end up with layers of commented out sections and extraneous print statements when you do a dev commit to park your work. Next time, you can start leaving a fresh mess!
 
 
