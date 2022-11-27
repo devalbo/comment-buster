@@ -3,7 +3,7 @@ Comment-buster is a VS Code extension that searches through code files for chunk
 
 
 ## Get Started
-* Install the extension (download from here).
+* Install extension - [download from here](https://github.com/devalbo/comment-buster/tree/main/releases).
 * Bring up the VS Code Command Palette (Ctrl+Shift+P on Windows) and choose to `Bust` comments or print statements.
 * Use the `Comment Buster Panel` and `Print Buster Panel` to find sections to clean up.
 * Clean up, save your files, and rinse/repeat until you're good to park your work.
