@@ -2,7 +2,7 @@
   "name": "comment-buster",
   "displayName": "comment-buster",
   "description": "Find sections of commented out code",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/devalbo/comment-buster.git"
