@@ -35,4 +35,16 @@ Next time, clean up after yourself quickly so you can leave a fresh mess!
 
 Initial release of Comment-buster
 
+
+## Running/Developing Locally
+
+* Notes to `devalbo` for local dev/maintenance
+  * Make updates
+  * Update version in `package.json`
+  * Run `vsce package`
+  * Add generated output to `releases` folder
+  * See Microsoft's documentation here: https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+* To run/debug - Open in VS Code and start debugging with `F5` (on Windows)
+
+
 **Enjoy!**
